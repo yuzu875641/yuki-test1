@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>日本の刑法について</title>
+        <title>タイトル</title> <!--タイトルを入れる-->
         <style>
             body{
                 margin: 0 auto;
@@ -50,7 +50,7 @@
             }
             
             function check(){
-                if(getElm('check').value == '罪刑法定主義'){
+                if(getElm('check').value == 'pass'){ <!--パスワードを入れる-->
                     getElm('result').textContent = '正解';
                     doc.cookie = 'yuki=True; path=/;';
                     location.replace('/')
@@ -65,22 +65,8 @@
         <div id="wrapper">
             
             <div id="header">
-                <nav>
-                    <ul>
-                        <li><a>刑法解釈学素人のメモ</a></li>
-                    </ul>
-                </nav>
-            </div>
-            
-            <div id="main">
-                <h1>刑法について</h1>
-                <h2>罪刑法定主義について</h2>
-                <p>日本の刑法は「罪刑法定主義」です。</p>
-                <p>罪刑法定主義とは、「法で定められていなければ罪を犯したことにはならない」という考え方です。</p>
-                <p>甲が乙を鋭利な凶器用いて殺害したとしても、法で殺人について記述が一切なければ犯罪犯したとは言えません（道徳的・倫理的・人道的な観点から善くないですが）。</p>
-                <p>どなたの本かは伏せさせて頂きますが、刑法各論及び総論読んだだけの素人が書いたものですので、間違っている箇所等あるかもしれません。</p>
-                <h3>おさらい</h3>
-                <p>Q. 日本の刑法は何主義ですか？</p>
+                <!--好きな文を入れよう-->
+                <!--<a href="/nyanko_a/link/"></a> サイト集やチャトワへのリンク-->
                 <input id="check" type="text">
                 <input type="button" onclick="check()" value="Check">
                 <div id="result"></div>
