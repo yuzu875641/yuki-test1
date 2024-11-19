@@ -10,9 +10,9 @@ from cache import cache
 import ast
 
 # 3 => (3.0, 1.5)
-max_api_wait_time = (3.0, 1.5)
+max_api_wait_time = 8
 # 10 => 10
-max_time = 10
+max_time = 12
 
 
 header = {
