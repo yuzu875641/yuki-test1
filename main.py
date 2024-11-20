@@ -10,9 +10,9 @@ from cache import cache
 import ast
 
 # 3 => (3.0, 1.5)
-max_api_wait_time = 8
+max_api_wait_time = 3
 # 10 => 10
-max_time = 12
+max_time = 10
 
 
 header = {
@@ -198,7 +198,6 @@ from typing import Union
 
 
 app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
-app.mount("/js", StaticFiles(directory="./js"), name="static")
 app.mount("/css", StaticFiles(directory="./css"), name="static")
 app.mount("/nyanko_a", StaticFiles(directory="./blog", html=True), name="static")
 app.add_middleware(GZipMiddleware, minimum_size=1000)
