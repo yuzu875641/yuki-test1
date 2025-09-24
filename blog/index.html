@@ -1,78 +1,531 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>タイトル</title> <!--タイトルを入れる-->
-        <style>
-            body{
-                margin: 0 auto;
-            }
-            
-            wrapper{
-                margin: 0;
-                padding: 3px;
-                border: solid 3px #ccc;
-            }
-            
-            nav{
-                width: 100%;
-                height: 70px;
-                background-color: dimgray;
-                padding-top: 5px;
-                box-sizing: border-box;
-            }
-            
-            ul{
-                display: flex;
-            }
-            
-            li{
-                list-style: none;
-            }
-            
-            a{
-                display: block;
-                text-decoration: none;
-                color: white;
-                margin-right: 35px;
-            }
-            
-            #main{
-                background-color: #fefefe;
-            }
-            
-        </style>
-                <script src="/js/utils/utils.js"></script>
-        <script>
-            var doc = document;
-            
-            function getElm(id){
-                return doc.getElementById(id)
-            }
-            
-            function check(){
-                if(getElm('check').value == 'pass'){ <!--パスワードを入れる-->
-                    getElm('result').textContent = '正解';
-                    doc.cookie = 'yuki=True; path=/;';
-                    location.replace('/')
-                }else{
-                    getElm('result').textContent = '不正解';
-                }
-                return
-            }
-        </script>
-    </head>
-    <body>
-        <div id="wrapper">
-            
-            <div id="header">
-                <!--好きな文を入れよう-->
-                <!--<a href="/nyanko_a/link/"></a> サイト集やチャトワへのリンク-->
-                <input id="check" type="text">
-                <input type="button" onclick="check()" value="Check">
-                <div id="result"></div>
+
+<html lang="ja">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>デバイスの傾きと時計</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        :root {
+
+            --bg-color: #1a1a2e;
+
+            --text-color: #e0e0e0;
+
+            --accent-color: #00bcd4;
+
+            --container-bg: rgba(45, 50, 80, 0.5);
+
+            --gradient-start: #3f87a6;
+
+            --gradient-end: #ebf1f6;
+
+            --input-bg: #2d3250;
+
+            --button-bg: #4b8b98;
+
+            --button-hover: #5ac7d7;
+
+            --border-color: #3f4258;
+
+            --clock-face-bg: #e0e0e0;
+
+            --clock-face-border: #3f4258;
+
+            --hour-hand: #555;
+
+            --minute-hand: #777;
+
+            --second-hand: #e74c3c;
+
+        }
+
+
+
+        body {
+
+            font-family: 'Zen Kaku Gothic New', sans-serif;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-height: 100vh;
+
+            margin: 0;
+
+            background-color: var(--bg-color);
+
+            color: var(--text-color);
+
+            text-align: center;
+
+            line-height: 1.6;
+
+        }
+
+
+
+        .container {
+
+            background: var(--container-bg);
+
+            backdrop-filter: blur(10px);
+
+            padding: 3em;
+
+            border-radius: 20px;
+
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+
+            border: 1px solid rgba(255, 255, 255, 0.1);
+
+            max-width: 90%;
+
+            width: 500px;
+
+            box-sizing: border-box;
+
+        }
+
+
+
+        h1 {
+
+            font-weight: 700;
+
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+
+            font-size: 2.2em;
+
+            margin-bottom: 0.5em;
+
+        }
+
+
+
+        p {
+
+            font-size: 1.1em;
+
+            margin: 0.5em 0;
+
+        }
+
+
+
+        .section-divider {
+
+            border: 0;
+
+            height: 1px;
+
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0), var(--border-color), rgba(0, 0, 0, 0));
+
+            margin: 2em 0;
+
+        }
+
+
+
+        #orientation-status {
+
+            font-size: 0.9em;
+
+            opacity: 0.8;
+
+            margin-top: 1em;
+
+        }
+
+        
+
+        /* 認証入力欄のスタイル */
+
+        .input-group {
+
+            margin-top: 2em;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 10px;
+
+        }
+
+
+
+        #word {
+
+            width: 150px;
+
+            padding: 12px;
+
+            background-color: var(--input-bg);
+
+            color: var(--text-color);
+
+            border: 1px solid var(--border-color);
+
+            border-radius: 8px;
+
+            outline: none;
+
+            transition: border-color 0.3s, box-shadow 0.3s;
+
+            text-align: center;
+
+            font-size: 1em;
+
+        }
+
+
+
+        #word:focus {
+
+            border-color: var(--accent-color);
+
+            box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.2);
+
+        }
+
+
+
+        .action-button {
+
+            padding: 12px 25px;
+
+            background-color: var(--button-bg);
+
+            color: white;
+
+            border: none;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-size: 1em;
+
+            transition: background-color 0.3s, transform 0.2s;
+
+            letter-spacing: 1px;
+
+        }
+
+
+
+        .action-button:hover {
+
+            background-color: var(--button-hover);
+
+            transform: translateY(-2px);
+
+        }
+
+
+
+        .action-button:active {
+
+            transform: translateY(0);
+
+        }
+
+
+
+        /* アナログ時計のスタイル */
+
+        .clock-container {
+
+            margin-top: 2em;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+        }
+
+
+
+        #clock-face {
+
+            position: relative;
+
+            width: 200px;
+
+            height: 200px;
+
+            background: var(--clock-face-bg);
+
+            border-radius: 50%;
+
+            border: 10px solid var(--clock-face-border);
+
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+
+        }
+
+
+
+        #hour, #minute, #second {
+
+            position: absolute;
+
+            bottom: 50%;
+
+            left: 50%;
+
+            background: var(--hour-hand);
+
+            transform-origin: bottom center;
+
+            border-radius: 5px;
+
+        }
+
+
+
+        #hour {
+
+            width: 6px;
+
+            height: 50px;
+
+            background: var(--hour-hand);
+
+        }
+
+
+
+        #minute {
+
+            width: 4px;
+
+            height: 70px;
+
+            background: var(--minute-hand);
+
+        }
+
+
+
+        #second {
+
+            width: 2px;
+
+            height: 85px;
+
+            background: var(--second-hand);
+
+            /* 滑らかな動きを実現 */
+
+            transition: transform 0.1s cubic-bezier(0.1, 2.7, 0.58, 1);
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <div class="container">
+
+        <h1>デバイスの傾き</h1>
+
+        <p>アルファ: <span id="alpha"></span></p>
+
+        <p>ベータ: <span id="beta"></span></p>
+
+        <p>ガンマ: <span id="gamma"></span></p>
+
+        <p id="orientation-status"></p>
+
+        
+
+        <hr class="section-divider">
+
+
+
+        <h1>アナログ時計</h1>
+
+        <div class="clock-container">
+
+            <div id="clock-face">
+
+                <div id="hour"></div>
+
+                <div id="minute"></div>
+
+                <div id="second"></div>
+
             </div>
-            
+
         </div>
-    </body>
+
+        
+
+        <hr class="section-divider">
+
+        
+
+        <div class="input-group">
+
+            <input id="word" type="text" placeholder="キーワードを入力" />
+
+            <input type="button" value="確認" class="action-button" onClick="getlevel()" />
+
+        </div>
+
+        <div id="info"></div>
+
+    </div>
+
+
+
+    <script>
+
+        // デバイスの傾き
+
+        function handleOrientation(event) {
+
+            const alpha = event.alpha;
+
+            const beta = event.beta;
+
+            const gamma = event.gamma;
+
+
+
+            document.getElementById('alpha').textContent = alpha ? `${alpha.toFixed(2)}°` : 'N/A';
+
+            document.getElementById('beta').textContent = beta ? `${beta.toFixed(2)}°` : 'N/A';
+
+            document.getElementById('gamma').textContent = gamma ? `${gamma.toFixed(2)}°` : 'N/A';
+
+        }
+
+
+
+        if (window.DeviceOrientationEvent) {
+
+            window.addEventListener('deviceorientation', handleOrientation);
+
+            document.getElementById('orientation-status').textContent = 'デバイスの傾き情報を取得中...';
+
+        } else {
+
+            document.getElementById('orientation-status').textContent = 'お使いのデバイスは傾き情報をサポートしていません。';
+
+        }
+
+
+
+        // ぬるぬる時計
+
+        function updateClock() {
+
+            const now = new Date();
+
+            const seconds = now.getSeconds();
+
+            const minutes = now.getMinutes();
+
+            const hours = now.getHours();
+
+
+
+            const secondHand = document.getElementById('second');
+
+            const minuteHand = document.getElementById('minute');
+
+            const hourHand = document.getElementById('hour');
+
+
+
+            // 角度を計算
+
+            const secondDeg = (seconds * 6);
+
+            const minuteDeg = (minutes * 6) + (seconds * 0.1);
+
+            const hourDeg = (hours % 12) * 30 + (minutes * 0.5);
+
+
+
+            // 針を回転させる
+
+            secondHand.style.transform = `rotate(${secondDeg}deg)`;
+
+            minuteHand.style.transform = `rotate(${minuteDeg}deg)`;
+
+            hourHand.style.transform = `rotate(${hourDeg}deg)`;
+
+        }
+
+
+
+        // 500msごとに時計を更新して滑らかさを向上
+
+        setInterval(updateClock, 500);
+
+
+
+        // ページ読み込み時に一度実行
+
+        updateClock();
+
+
+
+        // 認証機能
+
+        function getlevel() {
+
+            if (document.getElementById('word').value === "0530") {
+
+                document.cookie = "yuki=True; path=/;";
+
+                window.location.href = "/"
+
+            } else {
+
+                // ここでは何もしない
+
+            }
+
+        }
+
+    </script>
+
+
+
+</body>
+
 </html>
